@@ -50,9 +50,7 @@ public class ClientHandler {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                     }
-
                 }
             }).start();
         } catch (IOException e) {
