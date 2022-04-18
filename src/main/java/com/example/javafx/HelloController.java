@@ -87,14 +87,11 @@ public class HelloController implements Initializable {
                                 e.printStackTrace();
                             }
                         }
-
                 }
             }).start();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 }
