@@ -12,8 +12,8 @@
    <Pane prefHeight="98.0" prefWidth="504.0" />
     <HBox>
         <TextField fx:id="textField" promptText="Input text Message..." HBox.hgrow="ALWAYS" onKeyPressed="#KeyListener" />
-        <Button fx:id="button" onAction="#sendMessage" text="left send" />
-        <Button fx:id="button2" onAction="#sendMessage2" text="right send" />
+        <Button fx:id="button" onAction="#sendMessage" text="send" />
+
     </HBox>
 
 
