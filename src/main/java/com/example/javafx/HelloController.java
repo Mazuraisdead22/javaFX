@@ -32,7 +32,6 @@ public class HelloController implements Initializable {
     TextField textField;
 
     public void sendMessage(){
-       // textArea.appendText(textField.getText() + "\n");
         try {
             out.writeUTF(textField.getText());
             textField.clear();
@@ -60,6 +59,7 @@ public class HelloController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
+
             socket = new Socket(IP_ADDRESS, PORT);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
@@ -91,7 +91,7 @@ public class HelloController implements Initializable {
             }).start();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("сервер не найден");
         }
     }
 }

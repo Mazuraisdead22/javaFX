@@ -11,7 +11,7 @@ public class ClientHandler {
     DataOutputStream out;
     DataInputStream in;
 
-    public ClientHandler( Socket socket) {
+    public ClientHandler( Socket socket, MainServer mainServer) {
 
         this.socket = socket;
         try {
@@ -29,8 +29,9 @@ public class ClientHandler {
                             out.writeUTF("/end");
                             break;
                             }
-                            System.out.println("Client send message: " + str);
-                            out.writeUTF("ECHO:" + str + "\n");
+                        mainServer.sendToAll(str);
+
+
                         }
                         }catch (IOException e) {
                         e.printStackTrace();
@@ -41,6 +42,7 @@ public class ClientHandler {
                             e.printStackTrace();
                         }
                         try {
+                            out.writeUTF("/end");
                             out.close();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -55,6 +57,14 @@ public class ClientHandler {
 
                 }
             }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void sendMsg(String msg){
+        System.out.println("Client send message: " + msg);
+        try {
+            out.writeUTF("ECHO:" + msg + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

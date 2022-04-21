@@ -18,13 +18,21 @@ public class MainServer {
         try {
             server = new ServerSocket(8189);
             System.out.println("сервер запущен");
+
             while (true){
                 socket = server.accept();
             System.out.println("клинт подключен");
-            clientHandlers.add(new ClientHandler(socket));
+            clientHandlers.add(new ClientHandler(socket, this));
             }
         }catch (IOException e){
             e.printStackTrace();
         }
+    }
+    public void sendToAll(String msg){
+        for(ClientHandler client:
+        clientHandlers){
+            client.sendMsg(msg);
+        }
+
     }
 }
