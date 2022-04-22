@@ -16,17 +16,23 @@ public class MainServer {
         clientHandlers = new Vector<>();
 
         try {
+            AuthServer.connect();
+
             server = new ServerSocket(8189);
             System.out.println("сервер запущен");
 
             while (true){
                 socket = server.accept();
             System.out.println("клинт подключен");
-            clientHandlers.add(new ClientHandler(socket, this));
+            new ClientHandler(socket, this);
+
             }
         }catch (IOException e){
             e.printStackTrace();
+        }finally {
+            sendToAll("/end");
         }
+        AuthServer.disconnect();
     }
     public void sendToAll(String msg){
         for(ClientHandler client:
@@ -34,5 +40,11 @@ public class MainServer {
             client.sendMsg(msg);
         }
 
+    }
+    public void subscribe(ClientHandler client){
+        clientHandlers.add(client);
+    }
+    public void unsubscribe(ClientHandler client){
+        clientHandlers.remove(client);
     }
 }

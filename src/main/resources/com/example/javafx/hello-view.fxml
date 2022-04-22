@@ -6,14 +6,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.PasswordField?>
 
-<VBox alignment="CENTER" prefHeight="459.0" prefWidth="504.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/18" fx:controller="com.example.javafx.HelloController">
-    <TextArea fx:id="textArea" editable="false" prefHeight="281.0" prefWidth="504.0" VBox.vgrow="ALWAYS" />
-   <Pane prefHeight="98.0" prefWidth="504.0" />
-    <HBox>
-        <TextField fx:id="textField" promptText="Input text Message..." HBox.hgrow="ALWAYS" onKeyPressed="#KeyListener" />
-        <Button fx:id="button" onAction="#sendMessage" text="send" />
+<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.javafx.HelloController">
+    <HBox fx:id="upperPanel">
+        <TextField HBox.hgrow="ALWAYS" promptText="Логин" fx:id="loginField"/>
+        <PasswordField HBox.hgrow="ALWAYS" promptText="Пароль" fx:id="passwordField"/>
+        <Button fx:id="enter" text="OK" onAction="#auth"/>
 
+    </HBox>
+    <TextArea fx:id="textArea" editable="false" VBox.vgrow="ALWAYS"/>
+    <HBox fx:id="bottomPanel" managed="false" visible="false">
+        <TextField fx:id="textField" HBox.hgrow="ALWAYS" promptText="Input text Message..."
+                   onKeyPressed="#KeyListener" />
+        <Button fx:id="button" text="Send" onAction="#sendMessage" onKeyPressed="#KeyListener"/>
     </HBox>
 
 
