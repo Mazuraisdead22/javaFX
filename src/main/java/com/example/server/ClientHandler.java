@@ -12,7 +12,13 @@ public class ClientHandler {
     DataOutputStream out;
     DataInputStream in;
 
-    public ClientHandler( Socket socket, MainServer mainServer) {
+    private String nickname;
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public ClientHandler(Socket socket, MainServer mainServer) {
 
         this.socket = socket;
         this.server = mainServer;
@@ -20,38 +26,48 @@ public class ClientHandler {
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream((socket.getOutputStream()));
 
-            new  Thread(new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        while (true){
+                        while (true) {
                             String str = in.readUTF();// "/auth login password"
-                            if (str.startsWith("/auth")){
+
+                            if (str.startsWith("/auth")) {
                                 String[] creds = str.split(" ");
-                                String nick = AuthServer.getNickByLoginPass(creds[1], creds[2]);
-                                if(nick != null){
-                                    sendMsg("/authok");
+                                nickname = AuthServer.getNickByLoginPass(creds[1], creds[2]);
+
+                                if (isUserCorrect(nickname, server)){
+                                break;
+                            }
+                                /*if (nickname != null) {
+                                    sendServiceMsg("/authok" + "Вы залогинены под ником" + nickname);
                                     server.subscribe(ClientHandler.this);
+                                    server.sendOnLineUsers();
                                     break;
-                                }else {
+                                } else {
                                     sendMsg("Wrong Login/Password");
-                                }
+                                }*/
                             }
                         }
-                    while(true){
-                        String str;
-                        str = in.readUTF();
-                        if(str.equals("/end")) {
-                            out.writeUTF("/end");
-                            break;
-                        }
-                        mainServer.sendToAll(str);
 
+                        while (true) {
+                            String str;
+                            str = in.readUTF();
+                            if (str.equals("/end")) {
+                                out.writeUTF("/end");
+                                break;
+                            }
 
+                            if (str.startsWith("/show")) {
+                                server.sendOnLineUsers();
+                            }
+                            mainServer.sendToAll(nickname + ":" + str);
                         }
-                        }catch (IOException e) {
+
+                    } catch (IOException e) {
                         e.printStackTrace();
-                    }finally {
+                    } finally {
                         try {
                             out.writeUTF("/end");
                         } catch (IOException e) {
@@ -83,10 +99,33 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
-    public void sendMsg(String msg){
+
+    private boolean isUserCorrect(String nickname, MainServer server) {
+        if (server.isNickFree(nickname)){
+            server.subscribe(ClientHandler.this);
+            sendServiceMsg("/authok" + "Вы залогинены под ником" + nickname);
+            server.sendOnLineUsers();
+            return true;
+        } else{
+            sendMsg("Wrong Login/Password");
+            return false;
+        }
+    }
+
+
+    public void sendMsg(String msg) {
         System.out.println("Client send message: " + msg);
         try {
             out.writeUTF(msg + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendServiceMsg(String msg) {
+        System.out.println("Client send message: " + msg);
+        try {
+            out.writeUTF( msg + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
